@@ -1,14 +1,10 @@
 'use strict';
 
-const TONGI_API_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
-const SILICONFLOW_API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
-const MINIMAX_API_URL = 'https://api.minimax.chat/v1/text/chatcompletion_v2';
-
 /**
  * 通用 AI 对话调用
  */
 async function callAI(config) {
-  const { provider, model, apiKey } = config;
+  const { provider, model, apiKey, baseUrl } = config;
 
   const systemPrompt = `你是族谱专家，擅长从古文/家谱文本中提取家族成员信息。
 请分析以下OCR文本，提取人物信息和关系。
@@ -41,49 +37,20 @@ async function callAI(config) {
 
   const { text, context } = config.payload;
 
-  let apiUrl, headers, body;
+  const apiUrl = (baseUrl || 'https://dashscope.aliyuncs.com/compatible-mode/v1') + '/chat/completions';
 
-  if (provider === 'minimax') {
-    apiUrl = MINIMAX_API_URL;
-    headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    };
-    body = {
-      model: model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `背景信息：${context || '无'}\n\nOCR文本：\n${text}` }
-      ]
-    };
-  } else if (provider === 'siliconflow') {
-    apiUrl = SILICONFLOW_API_URL;
-    headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    };
-    body = {
-      model: model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `背景信息：${context || '无'}\n\nOCR文本：\n${text}` }
-      ]
-    };
-  } else {
-    // 通义千问（默认）
-    apiUrl = TONGI_API_URL;
-    headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    };
-    body = {
-      model: model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `背景信息：${context || '无'}\n\nOCR文本：\n${text}` }
-      ]
-    };
-  }
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+  };
+
+  const body = {
+    model: model,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: `背景信息：${context || '无'}\n\nOCR文本：\n${text}` }
+    ]
+  };
 
   try {
     const resp = await uniCloud.httpRequest({
@@ -111,7 +78,7 @@ async function callAI(config) {
 }
 
 exports.main = async (event) => {
-  const { text, context, model, apiKey, provider } = event;
+  const { text, context, model, apiKey, provider, baseUrl } = event;
 
   if (!text) {
     return { success: false, error: '缺少文本内容' };
@@ -125,6 +92,7 @@ exports.main = async (event) => {
       provider: provider || 'qwen',
       model: model || 'qwen-plus',
       apiKey,
+      baseUrl: baseUrl || '',
       payload: { text, context }
     });
 

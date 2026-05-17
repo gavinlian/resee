@@ -1,14 +1,10 @@
 'use strict';
 
-const TONGI_API_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
-const SILICONFLOW_API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
-const MINIMAX_API_URL = 'https://api.minimax.chat/v1/text/chatcompletion_v2';
-
 /**
- * 通用 AI 对话调用
+ * AI 搜索云函数 - 支持所有大模型 API
  */
 async function callAI(config) {
-  const { provider, model, apiKey } = config;
+  const { provider, model, apiKey, baseUrl } = config;
 
   const systemPrompt = `你是族谱专家，根据用户的自然语言问题，在族谱数据库中搜索相关成员信息。
 用户问题可能涉及：
@@ -30,32 +26,22 @@ async function callAI(config) {
   "result_count": 匹配数量
 }`;
 
-  const { query, familyId, db } = config.payload;
+  const { query, familyId } = config.payload;
 
-  let apiUrl, headers, body;
+  const apiUrl = (baseUrl || 'https://dashscope.aliyuncs.com/compatible-mode/v1') + '/chat/completions';
 
-  if (provider === 'minimax') {
-    apiUrl = MINIMAX_API_URL;
-    headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` };
-    body = { model, messages: [
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+  };
+
+  const body = {
+    model: model,
+    messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: `族谱ID: ${familyId || '当前族谱'}\n用户问题: ${query}` }
-    ]};
-  } else if (provider === 'siliconflow') {
-    apiUrl = SILICONFLOW_API_URL;
-    headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` };
-    body = { model, messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: `族谱ID: ${familyId || '当前族谱'}\n用户问题: ${query}` }
-    ]};
-  } else {
-    apiUrl = TONGI_API_URL;
-    headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` };
-    body = { model, messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: `族谱ID: ${familyId || '当前族谱'}\n用户问题: ${query}` }
-    ]};
-  }
+    ]
+  };
 
   try {
     const resp = await uniCloud.httpRequest({
@@ -79,7 +65,7 @@ async function callAI(config) {
 }
 
 exports.main = async (event) => {
-  const { query, familyId, model, apiKey, provider } = event;
+  const { query, familyId, model, apiKey, provider, baseUrl } = event;
 
   if (!query) {
     return { success: false, error: '缺少搜索问题' };
@@ -93,6 +79,7 @@ exports.main = async (event) => {
       provider: provider || 'qwen',
       model: model || 'qwen-plus',
       apiKey,
+      baseUrl: baseUrl || '',
       payload: { query, familyId }
     });
 

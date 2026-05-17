@@ -1,39 +1,66 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { getAILimits, saveAIConfig } from '@/api/ai'
-import { AI_PROVIDERS, AIConfig, loadConfig, saveConfig, getEnabledModels, saveEnabledModels } from '@/utils/ai-config'
+import {
+  loadConfig, saveConfig, getEnabledModels, saveEnabledModels,
+  getAllProviders, getProviderInfo, addCustomProvider, deleteCustomProvider,
+  getCustomProviders, type CustomProvider, type AIConfig
+} from '@/utils/ai-config'
 
 const aiConfig = ref<AIConfig>(loadConfig())
 const limits = ref(getAILimits())
 const editMode = ref(false)
 const tempEnabledModels = ref<string[]>([])
+const showCustomForm = ref(false)
+const customProviders = ref<CustomProvider[]>(getCustomProviders())
 
-// 保存AI配置
-function saveAiProvider() {
-  saveConfig(aiConfig.value)
-  saveAIConfig(aiConfig.value)
-  uni.showToast({ title: '保存成功', icon: 'success' })
-}
+// 自定义提供商表单
+const customForm = ref({
+  name: '',
+  baseUrl: '',
+  model: '',
+  apiKey: ''
+})
+
+// 所有提供商
+const allProviders = computed(() => getAllProviders())
+
+// 当前提供商信息
+const currentProviderInfo = computed(() => getProviderInfo(aiConfig.value.provider))
+
+// 当前模型列表
+const currentModels = computed(() => {
+  const info = currentProviderInfo.value
+  if (!info) return []
+  const enabled = getEnabledModels()
+  return info.models.filter(m => enabled.includes(m.id))
+})
+
+// 所有预设提供商（用于Tab切换）
+const presetTabs = [
+  { key: 'qwen', name: '通义千问' },
+  { key: 'minimax', name: 'MiniMax' },
+  { key: 'siliconflow', name: '硅基流动' },
+  { key: 'openai', name: 'OpenAI' },
+  { key: 'deepseek', name: 'DeepSeek' },
+  { key: 'zhipu', name: '智谱AI' }
+]
 
 // 切换提供商
-function switchProvider(provider: 'qwen' | 'minimax' | 'siliconflow' | 'openai') {
+function switchProvider(provider: string) {
   aiConfig.value.provider = provider
   const enabled = getEnabledModels()
-  const firstEnabled = AI_PROVIDERS[provider].models.find(m => enabled.includes(m.id))
-  aiConfig.value.model = firstEnabled ? firstEnabled.id : AI_PROVIDERS[provider].models[0].id
+  const info = getProviderInfo(provider)
+  if (info && info.models.length > 0) {
+    const firstEnabled = info.models.find(m => enabled.includes(m.id))
+    aiConfig.value.model = firstEnabled ? firstEnabled.id : info.models[0].id
+  }
 }
 
 // 切换模型
 function switchModel(model: string) {
   aiConfig.value.model = model
 }
-
-// 获取当前模型列表（仅显示已启用的）
-const currentModels = computed(() => {
-  const allModels = AI_PROVIDERS[aiConfig.value.provider]?.models || []
-  const enabled = getEnabledModels()
-  return allModels.filter(m => enabled.includes(m.id))
-})
 
 // 进入编辑模式
 function enterEditMode() {
@@ -69,14 +96,74 @@ function saveEnabledModelList() {
   }
   saveEnabledModels(tempEnabledModels.value)
   editMode.value = false
-  // 如果当前模型被取消启用了，切换到第一个
   if (!tempEnabledModels.value.includes(aiConfig.value.model)) {
-    const firstEnabled = AI_PROVIDERS[aiConfig.value.provider].models.find(m => tempEnabledModels.value.includes(m.id))
-    if (firstEnabled) {
-      aiConfig.value.model = firstEnabled.id
+    const info = currentProviderInfo.value
+    if (info && info.models.length > 0) {
+      const firstEnabled = info.models.find(m => tempEnabledModels.value.includes(m.id))
+      if (firstEnabled) aiConfig.value.model = firstEnabled.id
     }
   }
   uni.showToast({ title: '已保存', icon: 'success' })
+}
+
+// 保存AI配置
+function saveAiProvider() {
+  saveConfig(aiConfig.value)
+  saveAIConfig(aiConfig.value)
+  uni.showToast({ title: '保存成功', icon: 'success' })
+}
+
+// 显示添加自定义提供商
+function showAddCustom() {
+  customForm.value = { name: '', baseUrl: '', model: '', apiKey: '' }
+  showCustomForm.value = true
+}
+
+// 添加自定义提供商
+function doAddCustom() {
+  if (!customForm.value.name || !customForm.value.baseUrl || !customForm.value.model) {
+    uni.showToast({ title: '请填写完整信息', icon: 'none' })
+    return
+  }
+
+  const id = `custom_${Date.now()}`
+  addCustomProvider({
+    id,
+    name: customForm.value.name,
+    baseUrl: customForm.value.baseUrl,
+    model: customForm.value.model,
+    apiKey: customForm.value.apiKey
+  })
+
+  customProviders.value = getCustomProviders()
+  showCustomForm.value = false
+
+  // 自动切换到新的自定义提供商
+  aiConfig.value.provider = `custom_${id}`
+  aiConfig.value.model = customForm.value.model
+  if (customForm.value.apiKey) {
+    aiConfig.value.apiKey = customForm.value.apiKey
+  }
+  saveAiProvider()
+}
+
+// 删除自定义提供商
+function doDeleteCustom(id: string) {
+  uni.showModal({
+    title: '确认删除',
+    content: '确定删除该自定义提供商吗？',
+    success: (res) => {
+      if (res.confirm) {
+        deleteCustomProvider(id)
+        customProviders.value = getCustomProviders()
+        if (aiConfig.value.provider === `custom_${id}`) {
+          aiConfig.value.provider = 'qwen'
+          aiConfig.value.model = 'qwen-plus'
+        }
+        uni.showToast({ title: '已删除', icon: 'success' })
+      }
+    }
+  })
 }
 
 // 清除本地数据
@@ -95,6 +182,7 @@ function clearLocalData() {
 
 onMounted(() => {
   limits.value = getAILimits()
+  customProviders.value = getCustomProviders()
 })
 </script>
 
@@ -103,19 +191,45 @@ onMounted(() => {
     <view class="settings-section">
       <text class="section-title">AI 设置</text>
 
-      <!-- 提供商 -->
+      <!-- 预设提供商 -->
       <view class="setting-item">
         <text class="setting-label">AI 提供商</text>
-        <view class="provider-list">
+        <view class="provider-tabs">
           <view
-            v-for="(info, key) in AI_PROVIDERS"
-            :key="key"
-            class="provider-btn"
-            :class="{ active: aiConfig.provider === key }"
-            @click="switchProvider(key as any)"
+            v-for="tab in presetTabs"
+            :key="tab.key"
+            class="provider-tab"
+            :class="{ active: aiConfig.provider === tab.key }"
+            @click="switchProvider(tab.key)"
           >
-            {{ info.name }}
+            {{ tab.name }}
           </view>
+        </view>
+      </view>
+
+      <!-- 自定义提供商 -->
+      <view class="setting-item">
+        <view class="setting-label-row">
+          <text class="setting-label">自定义</text>
+          <text class="add-btn" @click="showAddCustom">+ 添加</text>
+        </view>
+        <view v-if="customProviders.length > 0" class="custom-list">
+          <view
+            v-for="cp in customProviders"
+            :key="cp.id"
+            class="custom-item"
+            :class="{ active: aiConfig.provider === 'custom_' + cp.id }"
+            @click="switchProvider('custom_' + cp.id)"
+          >
+            <view class="custom-info">
+              <text class="custom-name">{{ cp.name }}</text>
+              <text class="custom-model">{{ cp.model }}</text>
+            </view>
+            <text class="delete-btn" @click.stop="doDeleteCustom(cp.id)">✕</text>
+          </view>
+        </view>
+        <view v-else class="empty-custom">
+          <text>暂无自定义提供商</text>
         </view>
       </view>
 
@@ -140,7 +254,7 @@ onMounted(() => {
           </template>
           <template v-else>
             <view
-              v-for="model in AI_PROVIDERS[aiConfig.provider].models"
+              v-for="model in (currentProviderInfo?.models || [])"
               :key="model.id"
               class="model-btn"
               :class="{ enabled: isModelEnabled(model.id) }"
@@ -198,7 +312,6 @@ onMounted(() => {
 
     <view class="settings-section">
       <text class="section-title">数据管理</text>
-
       <button class="btn-outline danger" @click="clearLocalData">清除本地数据</button>
     </view>
 
@@ -208,6 +321,38 @@ onMounted(() => {
         <text class="about-name">族见族谱工具</text>
         <text class="about-version">版本 1.0.0</text>
         <text class="about-slogan">见家族，见自己。</text>
+      </view>
+    </view>
+
+    <!-- 添加自定义提供商弹窗 -->
+    <view v-if="showCustomForm" class="modal-overlay" @click="showCustomForm = false">
+      <view class="modal-content" @click.stop>
+        <text class="modal-title">添加自定义 AI</text>
+
+        <view class="form-item">
+          <text class="form-label">名称</text>
+          <input v-model="customForm.name" class="form-input" placeholder="如：我的模型" />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">API 地址</text>
+          <input v-model="customForm.baseUrl" class="form-input" placeholder="https://api.example.com/v1" />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">模型名称</text>
+          <input v-model="customForm.model" class="form-input" placeholder="如：gpt-4o" />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">API Key（可选）</text>
+          <input v-model="customForm.apiKey" class="form-input" placeholder="sk-..." />
+        </view>
+
+        <view class="modal-actions">
+          <button class="btn-outline" @click="showCustomForm = false">取消</button>
+          <button class="btn-primary" @click="doAddCustom">添加</button>
+        </view>
       </view>
     </view>
   </view>
@@ -253,22 +398,21 @@ onMounted(() => {
   margin-bottom: 12rpx;
 }
 
-.edit-btn {
+.edit-btn, .add-btn {
   font-size: 13px;
   color: var(--primary);
 }
 
-.provider-list {
+.provider-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 12rpx;
 }
 
-.provider-btn {
-  flex: 1;
-  padding: 16rpx;
-  text-align: center;
+.provider-tab {
+  padding: 12rpx 20rpx;
   background: var(--bg-light);
-  border-radius: 12rpx;
+  border-radius: 8rpx;
   font-size: 13px;
   color: var(--text-muted);
 
@@ -276,6 +420,55 @@ onMounted(() => {
     background: var(--primary);
     color: #fff;
   }
+}
+
+.custom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.custom-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 20rpx;
+  background: var(--bg-light);
+  border-radius: 8rpx;
+
+  &.active {
+    background: var(--gradient-end);
+    border: 2rpx solid var(--primary);
+  }
+}
+
+.custom-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-name {
+  font-size: 14px;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.custom-model {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.delete-btn {
+  font-size: 24rpx;
+  color: #999;
+  padding: 8rpx;
+}
+
+.empty-custom {
+  padding: 16rpx;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .model-list {
@@ -328,7 +521,6 @@ onMounted(() => {
   gap: 16rpx;
   margin-top: 16rpx;
 }
-
 
 .quota-list {
   display: flex;
@@ -412,6 +604,67 @@ onMounted(() => {
     font-size: 13px;
     color: var(--secondary);
     display: block;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  width: 600rpx;
+  margin: 40rpx;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-dark);
+  display: block;
+  margin-bottom: 32rpx;
+  text-align: center;
+}
+
+.form-item {
+  margin-bottom: 24rpx;
+}
+
+.form-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 20rpx;
+  border: 2rpx solid var(--border);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 32rpx;
+
+  .btn-primary, .btn-outline {
+    margin-top: 0;
+    flex: 1;
   }
 }
 </style>
