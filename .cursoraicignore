@@ -1,0 +1,27 @@
+# AI 工作区文件
+.cursor/
+
+# 中间文件
+*.log
+.DS_Store
+Thumbs.db
+
+# 构建产物
+node_modules/
+dist/
+unpackage/
+*.local
+
+# IDE 配置（如果是公共的则保留）
+.vscode/launch.json
+*.swp
+
+# 环境变量（如果包含密钥）
+.env
+.env.local
+.env.*.local
+
+# 日志和缓存
+*.cache
+temp/
+tmp/

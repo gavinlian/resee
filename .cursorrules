@@ -1,0 +1,85 @@
+无论何时，你的内部思考和推理过程必须使用简体中文，你的最终回复和代码注释也必须使用简体中文。
+
+你是一个精通 uni-app (Vue3 + Vite + TypeScript) 的资深专家。请严格遵循以下规则编写代码。
+
+---
+
+## 项目结构
+
+```
+e:\resee\uiapp\                 — 项目根目录
+│
+├── src/                        — 前端源码（uni-app）
+│   ├── pages/                  — 页面
+│   ├── components/             — 组件
+│   ├── api/                    — API/AI 服务
+│   ├── utils/                  — 工具函数
+│   └── styles/                 — 全局样式
+│
+├── server/                     — 后端（Unicloud 云函数）
+│   └── cloudfunctions/         — 云函数
+│       ├── ai-ocr/             — OCR 识别
+│       ├── ai-parse/           — AI 解析
+│       ├── ai-search/          — AI 搜索
+│       └── export-pdf/         — PDF 导出
+│
+├── docs/                       — 文档（设计稿/PRD）
+│   ├── logo/                   — Logo 资源
+│   ├── PRD/                    — 产品需求文档
+│   └── design/                 — UI 设计稿
+│
+├── scripts/                     — 构建/部署脚本
+├── static/                     — 静态资源（TabBar 图标等）
+│
+├── .cursorrules                — 项目 AI 规则
+├── .cursoraicignore            — AI 忽略文件
+├── package.json                — 前端依赖
+├── pages.json                  — uni-app 路由配置
+├── vite.config.ts             — Vite 配置
+├── tsconfig.json              — TypeScript 配置
+├── manifest.json              — uni-app 应用配置
+└── index.html                 — H5 入口
+```
+
+---
+
+## 代码规范
+
+1. 【模板语法】绝对禁止使用 HTML 标签（如 div, span, img, a）。必须使用 uni-app 组件：`<view>`, `<text>`, `<image>`, `<navigator>`。
+2. 【API 调用】绝对禁止使用浏览器原生 API（如 document, window, localStorage, fetch, axios）。必须使用 uni-app API（如 uni.request, uni.setStorageSync, uni.navigateTo）。
+3. 【脚本规范】必须使用 Vue3 `<script setup lang="ts">` 语法，使用组合式 API (Composition API)。
+4. 【样式规范】样式必须使用 scoped，尺寸单位优先使用 rpx（为了适配多端），禁止在 JS 中操作 DOM。
+5. 【条件编译】遇到多端差异（如支付、分享），必须使用 uni-app 的条件编译语法：`#ifdef H5` / `#ifdef MP-WEIXIN` / `#ifdef APP-PLUS`。
+6. 【路由跳转】禁止使用 vue-router，必须使用 uni.navigateTo, uni.switchTab 等。
+7. 【生命周期】禁止使用纯 Web 的生命周期（如 mounted 代替一切），必须使用 uni-app 页面生命周期（onLoad, onShow, onReady 等）。
+
+---
+
+## 云函数目录规范
+
+每个云函数一个独立目录，目录结构：
+
+```
+server/cloudfunctions/<云函数名>/
+├── index.js          — 云函数入口
+├── package.json     — 依赖
+└── README.md        — 说明（复杂函数需写）
+```
+
+---
+
+## 命名规范
+
+- 文件名/目录名：`kebab-case`（如 `ai-parse`、`ocr-review`）
+- 页面目录：小写（如 `pages/index`、`pages/tree`）
+- 组件：大写 PascalCase（如 `GeneTreeChart.vue`）
+- 函数：`camelCase`（如 `getAILimits`）
+- 常量：`UPPER_SNAKE_CASE`（如 `COLLECTIONS`）
+
+---
+
+## 安全红线
+
+- 不硬编码密钥、token、password、apiKey
+- 不在日志打印敏感信息
+- 不确定的操作先问用户

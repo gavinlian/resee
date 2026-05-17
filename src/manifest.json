@@ -1,0 +1,35 @@
+{
+  "name": "resee-genalogy",
+  "appid": "__UNI__RESEE_GENEALOGY",
+  "description": "族见族谱工具",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "h5": {
+    "title": "族见族谱工具",
+    "router": {
+      "mode": "hash"
+    },
+    "devServer": {
+      "port": 5173
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "uniCloud": {
+    "spaceId": "",
+    "providerName": "aliyun"
+  },
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": true
+  },
+  "app-plus": {
+    "usingComponents": true
+  }
+}

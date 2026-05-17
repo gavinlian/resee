@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>族见 ReSee - Logo设计方案预览</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 设计师主导的色彩系统 */
+            --primary: #8B6F47;      /* 暖棕 - 主色 */
+            --secondary: #C9A961;    /* 金棕 - 辅色 */
+            --accent: #D48C4A;       /* 琥珀橙 - 强调色 */
+            --bg-light: #F9F5F0;    /* 米白 - 背景 */
+            --text-dark: #4A3F35;   /* 深棕灰 - 文字 */
+            --gradient-end: #E8D5B7; /* 浅暖 - 渐变终点 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #1a1a1a;
+            color: #f5f0e8;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 1px solid #333;
+        }
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+        .brand-name-cn {
+            font-size: 28px;
+            font-weight: 300;
+            color: #888;
+            letter-spacing: 0.5em;
+            margin-bottom: 20px;
+        }
+        .slogan {
+            font-size: 18px;
+            font-weight: 300;
+            color: #666;
+            letter-spacing: 0.3em;
+        }
+        .slogan span { color: var(--accent); }
+
+        /* Color Palette Bar */
+        .color-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            padding: 30px;
+            background: #0d0d0d;
+        }
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            font-size: 10px;
+            font-family: monospace;
+        }
+
+        /* Section */
+        .section {
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--secondary);
+            margin-bottom: 40px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Logo Grid */
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .logo-card {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .logo-card:hover { transform: translateY(-4px); border-color: var(--secondary); }
+
+        .logo-preview {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-preview.dark { background: #0a0a0a; }
+        .logo-preview.light { background: var(--bg-light); }
+        .logo-preview.accent {
+            background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        }
+
+        .logo-preview svg { max-width: 180px; max-height: 180px; }
+
+        .logo-info {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+        .logo-info h3 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+        .logo-info p { font-size: 12px; color: #888; }
+
+        /* App Icon Row */
+        .app-icon-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+            background: #0a0a0a;
+        }
+        .app-icon-item {
+            text-align: center;
+        }
+        .app-icon-item svg { display: block; margin-bottom: 12px; }
+        .app-icon-item span { font-size: 12px; color: #888; }
+
+        /* Usage Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .scenario-card {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 32px;
+        }
+        .scenario-card h4 {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .scenario-card.mock {
+            background: var(--bg-light);
+            border-color: #e0d5c8;
+        }
+        .scenario-card.mock h4 { color: var(--primary); }
+
+        /* Navigation Bar Mock */
+        .mock-nav {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            height: 56px;
+            background: var(--primary);
+            gap: 32px;
+        }
+        .mock-nav svg { width: 32px; height: 32px; }
+        .mock-nav span {
+            color: var(--bg-light);
+            font-size: 14px;
+            letter-spacing: 0.1em;
+        }
+
+        /* Button Mock */
+        .mock-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(212, 140, 74, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .logo-grid { grid-template-columns: 1fr; }
+            .scenario-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="brand-name">ReSee</div>
+        <div class="brand-name-cn">族 见</div>
+        <div class="slogan"><span>见家族</span>，<span>见自己</span>。</div>
+    </header>
+
+    <!-- Color Palette -->
+    <div class="color-bar">
+        <div class="color-swatch" style="background: #8B6F47; color: white;">#8B6F47<br>暖棕</div>
+        <div class="color-swatch" style="background: #C9A961; color: #333;">#C9A961<br>金棕</div>
+        <div class="color-swatch" style="background: #D48C4A; color: white;">#D48C4A<br>琥珀橙</div>
+        <div class="color-swatch" style="background: #F9F5F0; color: #4A3F35;">#F9F5F0<br>米白</div>
+        <div class="color-swatch" style="background: #4A3F35; color: white;">#4A3F35<br>深棕灰</div>
+        <div class="color-swatch" style="background: #E8D5B7; color: #4A3F35;">#E8D5B7<br>浅暖</div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">01 — 三套配色方案</h2>
+        <div class="logo-grid">
+            <!-- Dark Theme -->
+            <div class="logo-card">
+                <div class="logo-preview dark">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 科技感虚线外环 -->
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.2"/>
+                        <circle cx="100" cy="100" r="75" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="2 8" opacity="0.1"/>
+
+                        <!-- 主干 - 暖棕色 -->
+                        <path d="M100 180 L100 140" stroke="#8B6F47" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M100 140 L100 100" stroke="#8B6F47" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 L100 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+                        <!-- 主要分支 - 金棕色 -->
+                        <path d="M100 140 C88 132, 65 118, 50 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 C82 92, 55 78, 40 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M100 140 C112 132, 135 118, 150 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 C118 92, 145 78, 160 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+                        <!-- 次要分支 -->
+                        <path d="M50 100 C45 88, 35 75, 30 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+                        <path d="M150 100 C155 88, 165 75, 170 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+                        <!-- 节点 - 祖先(底部) - 暖棕色 -->
+                        <circle cx="100" cy="180" r="11" fill="#8B6F47"/>
+                        <circle cx="100" cy="140" r="10" fill="#8B6F47"/>
+                        <circle cx="50" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="150" cy="100" r="9" fill="#C9A961"/>
+
+                        <!-- 节点 - 中层 -->
+                        <circle cx="100" cy="100" r="9" fill="#C9A961"/>
+
+                        <!-- 节点 - 顶部(未来) - 琥珀橙 -->
+                        <circle cx="100" cy="60" r="8" fill="#D48C4A"/>
+                        <circle cx="100" cy="60" r="14" fill="none" stroke="#D48C4A" stroke-width="1.5" opacity="0.5"/>
+
+                        <!-- 阴阳节点 -->
+                        <circle cx="100" cy="100" r="5" fill="#E8D5B7"/>
+                        <circle cx="100" cy="100" r="3" fill="#0a0a0a"/>
+
+                        <!-- 末端节点 -->
+                        <circle cx="40" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+                        <circle cx="160" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+                        <circle cx="30" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+                        <circle cx="170" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <h3>Dark · 深色主题</h3>
+                    <p>适用于深色背景、启动页</p>
+                </div>
+            </div>
+
+            <!-- Light Theme -->
+            <div class="logo-card">
+                <div class="logo-preview light">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#8B6F47" stroke-width="0.8" stroke-dasharray="4 6" opacity="0.25"/>
+                        <circle cx="100" cy="100" r="75" fill="none" stroke="#C9A961" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.2"/>
+
+                        <path d="M100 180 L100 140" stroke="#8B6F47" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M100 140 L100 100" stroke="#8B6F47" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 L100 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+                        <path d="M100 140 C88 132, 65 118, 50 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 C82 92, 55 78, 40 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M100 140 C112 132, 135 118, 150 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 100 C118 92, 145 78, 160 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+                        <path d="M50 100 C45 88, 35 75, 30 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+                        <path d="M150 100 C155 88, 165 75, 170 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+                        <circle cx="100" cy="180" r="11" fill="#8B6F47"/>
+                        <circle cx="100" cy="140" r="10" fill="#8B6F47"/>
+                        <circle cx="50" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="150" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="100" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="100" cy="60" r="8" fill="#D48C4A"/>
+                        <circle cx="100" cy="60" r="14" fill="none" stroke="#D48C4A" stroke-width="1.5" opacity="0.4"/>
+                        <circle cx="100" cy="100" r="5" fill="#E8D5B7"/>
+                        <circle cx="100" cy="100" r="3" fill="#F9F5F0"/>
+                        <circle cx="40" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+                        <circle cx="160" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+                        <circle cx="30" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+                        <circle cx="170" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <h3>Light · 浅色主题</h3>
+                    <p>适用于浅色背景、白色背景</p>
+                </div>
+            </div>
+
+            <!-- Accent Theme -->
+            <div class="logo-card">
+                <div class="logo-preview accent">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#C9A961" stroke-width="1" stroke-dasharray="4 6" opacity="0.5"/>
+                        <circle cx="100" cy="100" r="75" fill="none" stroke="#D48C4A" stroke-width="0.6" stroke-dasharray="2 8" opacity="0.3"/>
+
+                        <path d="M100 180 L100 140" stroke="#C9A961" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M100 140 L100 100" stroke="#C9A961" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M100 100 L100 60" stroke="#D48C4A" stroke-width="2.5" stroke-linecap="round"/>
+
+                        <path d="M100 140 C88 132, 65 118, 50 100" stroke="#C9A961" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M100 100 C82 92, 55 78, 40 60" stroke="#D48C4A" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M100 140 C112 132, 135 118, 150 100" stroke="#C9A961" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M100 100 C118 92, 145 78, 160 60" stroke="#D48C4A" stroke-width="2.5" stroke-linecap="round"/>
+
+                        <path d="M50 100 C45 88, 35 75, 30 65" stroke="#D48C4A" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+                        <path d="M150 100 C155 88, 165 75, 170 65" stroke="#D48C4A" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+
+                        <circle cx="100" cy="180" r="11" fill="#C9A961"/>
+                        <circle cx="100" cy="140" r="10" fill="#C9A961"/>
+                        <circle cx="50" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="150" cy="100" r="9" fill="#C9A961"/>
+                        <circle cx="100" cy="100" r="9" fill="#D48C4A"/>
+                        <circle cx="100" cy="60" r="8" fill="#E8D5B7"/>
+                        <circle cx="100" cy="60" r="14" fill="none" stroke="#D48C4A" stroke-width="2" opacity="0.6"/>
+                        <circle cx="100" cy="60" r="22" fill="none" stroke="#E8D5B7" stroke-width="1" opacity="0.3"/>
+                        <circle cx="100" cy="100" r="5" fill="#E8D5B7"/>
+                        <circle cx="100" cy="100" r="3" fill="#1a1410"/>
+                        <circle cx="40" cy="60" r="6" fill="#D48C4A"/>
+                        <circle cx="160" cy="60" r="6" fill="#D48C4A"/>
+                        <circle cx="30" cy="65" r="5" fill="#D48C4A" opacity="0.7"/>
+                        <circle cx="170" cy="65" r="5" fill="#D48C4A" opacity="0.7"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <h3>Accent · 强调主题</h3>
+                    <p>适用于品牌强调、Hero区域</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">02 — App Icon 应用</h2>
+        <div class="app-icon-row">
+            <div class="app-icon-item">
+                <svg viewBox="0 0 1024 1024" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="1024" height="1024" rx="180" fill="#0a0a0a"/>
+                    <g transform="translate(362, 212)">
+                        <circle cx="150" cy="150" r="140" fill="none" stroke="#8B6F47" stroke-width="2" stroke-dasharray="6 9" opacity="0.2"/>
+                        <path d="M150 280 L150 220" stroke="#8B6F47" stroke-width="8" stroke-linecap="round"/>
+                        <path d="M150 220 L150 160" stroke="#8B6F47" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M150 160 L150 100" stroke="#C9A961" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M150 220 C132 210, 100 195, 80 170" stroke="#C9A961" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M150 160 C125 150, 85 135, 65 105" stroke="#C9A961" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M150 220 C168 210, 200 195, 220 170" stroke="#C9A961" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M150 160 C175 150, 215 135, 235 105" stroke="#C9A961" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="150" cy="280" r="25" fill="#8B6F47"/>
+                        <circle cx="150" cy="220" r="22" fill="#8B6F47"/>
+                        <circle cx="80" cy="170" r="20" fill="#C9A961"/>
+                        <circle cx="220" cy="170" r="20" fill="#C9A961"/>
+                        <circle cx="150" cy="160" r="20" fill="#C9A961"/>
+                        <circle cx="65" cy="105" r="17" fill="#D48C4A"/>
+                        <circle cx="235" cy="105" r="17" fill="#D48C4A"/>
+                        <circle cx="150" cy="100" r="16" fill="#D48C4A"/>
+                        <circle cx="150" cy="160" r="12" fill="#E8D5B7"/>
+                        <circle cx="150" cy="160" r="7" fill="#0a0a0a"/>
+                    </g>
+                </svg>
+                <span>iOS App Icon<br>1024×1024</span>
+            </div>
+            <div class="app-icon-item">
+                <svg viewBox="0 0 512 512" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="512" height="512" rx="80" fill="#0a0a0a"/>
+                    <g transform="translate(156, 86)">
+                        <path d="M100 320 L100 240" stroke="#8B6F47" stroke-width="8" stroke-linecap="round"/>
+                        <path d="M100 240 L100 160" stroke="#C9A961" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M100 240 C88 230, 65 215, 50 190" stroke="#C9A961" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M100 240 C112 230, 135 215, 150 190" stroke="#C9A961" stroke-width="6.5" stroke-linecap="round"/>
+                        <circle cx="100" cy="320" r="22" fill="#8B6F47"/>
+                        <circle cx="100" cy="240" r="20" fill="#8B6F47"/>
+                        <circle cx="50" cy="190" r="18" fill="#C9A961"/>
+                        <circle cx="150" cy="190" r="18" fill="#C9A961"/>
+                        <circle cx="100" cy="160" r="15" fill="#D48C4A"/>
+                        <circle cx="100" cy="240" r="11" fill="#E8D5B7"/>
+                        <circle cx="100" cy="240" r="6" fill="#0a0a0a"/>
+                    </g>
+                </svg>
+                <span>Android Icon<br>512×512</span>
+            </div>
+            <div class="app-icon-item">
+                <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+                    <g transform="translate(18, 10)">
+                        <path d="M14 44 L14 34" stroke="#8B6F47" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M14 34 L14 24" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M14 34 C11 31, 7 27, 5 22" stroke="#C9A961" stroke-width="2.2" stroke-linecap="round"/>
+                        <path d="M14 34 C17 31, 21 27, 23 22" stroke="#C9A961" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="14" cy="44" r="4" fill="#8B6F47"/>
+                        <circle cx="14" cy="34" r="3.5" fill="#8B6F47"/>
+                        <circle cx="5" cy="22" r="3" fill="#C9A961"/>
+                        <circle cx="23" cy="22" r="3" fill="#C9A961"/>
+                        <circle cx="14" cy="24" r="2.5" fill="#D48C4A"/>
+                    </g>
+                </svg>
+                <span>Toolbar Icon<br>64×64</span>
+            </div>
+            <div class="app-icon-item">
+                <svg viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="6" fill="#0a0a0a"/>
+                    <g transform="translate(9, 5)">
+                        <path d="M7 22 L7 17" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7 17 L7 12" stroke="#C9A961" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M7 17 C5.5 15.5, 3.5 13.5, 2.5 11" stroke="#C9A961" stroke-width="1.8" stroke-linecap="round"/>
+                        <path d="M7 17 C8.5 15.5, 10.5 13.5, 11.5 11" stroke="#C9A961" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="7" cy="22" r="2.5" fill="#8B6F47"/>
+                        <circle cx="7" cy="17" r="2" fill="#8B6F47"/>
+                        <circle cx="2.5" cy="11" r="1.8" fill="#C9A961"/>
+                        <circle cx="11.5" cy="11" r="1.8" fill="#C9A961"/>
+                        <circle cx="7" cy="12" r="1.5" fill="#D48C4A"/>
+                    </g>
+                </svg>
+                <span>Favicon<br>32×32</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">03 — 应用场景示意</h2>
+        <div class="scenario-grid">
+            <!-- Dark Scenario -->
+            <div class="scenario-card">
+                <h4>深色导航栏</h4>
+                <div style="background: #8B6F47; padding: 16px 20px; display: flex; align-items: center; gap: 16px;">
+                    <svg viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 28 L16 20" stroke="#F9F5F0" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16 20 L16 12" stroke="#F9F5F0" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M16 20 C13 18, 9 15, 7 12" stroke="#F9F5F0" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M16 20 C19 18, 23 15, 25 12" stroke="#F9F5F0" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="16" cy="28" r="2.5" fill="#F9F5F0"/>
+                        <circle cx="16" cy="20" r="2" fill="#F9F5F0"/>
+                        <circle cx="7" cy="12" r="1.8" fill="#F9F5F0"/>
+                        <circle cx="25" cy="12" r="1.8" fill="#F9F5F0"/>
+                        <circle cx="16" cy="12" r="1.5" fill="#F9F5F0"/>
+                    </svg>
+                    <span style="color: #F9F5F0; font-size: 14px; letter-spacing: 0.1em;">族见</span>
+                    <span style="margin-left: auto; color: rgba(249,245,240,0.7); font-size: 13px;">族谱 | 发现 | 我的</span>
+                </div>
+            </div>
+
+            <!-- Light Scenario -->
+            <div class="scenario-card mock">
+                <h4>浅色背景应用</h4>
+                <div style="padding: 20px;">
+                    <div class="mock-nav" style="margin-bottom: 16px;">
+                        <svg viewBox="0 0 32 32" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 28 L16 20" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M16 20 L16 12" stroke="#8B6F47" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M16 20 C13 18, 9 15, 7 12" stroke="#C9A961" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M16 20 C19 18, 23 15, 25 12" stroke="#C9A961" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="16" cy="28" r="2.5" fill="#8B6F47"/>
+                            <circle cx="16" cy="20" r="2" fill="#8B6F47"/>
+                            <circle cx="7" cy="12" r="1.8" fill="#C9A961"/>
+                            <circle cx="25" cy="12" r="1.8" fill="#C9A961"/>
+                            <circle cx="16" cy="12" r="1.5" fill="#D48C4A"/>
+                        </svg>
+                        <span>族见</span>
+                    </div>
+                    <div style="text-align: center; padding: 30px;">
+                        <div class="mock-btn">立即体验</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #C9A961; margin-bottom: 8px;">族见 ReSee</div>
+        <div style="color: #666; font-size: 12px;">品牌视觉系统 · 设计师主导 · 织女出品</div>
+    </footer>
+
+</body>
+</html>

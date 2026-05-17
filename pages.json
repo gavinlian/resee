@@ -1,0 +1,158 @@
+{
+  "$schema": "https://uniapp.dcloud.net.cn/schema",
+  "name": "resee-genalogy",
+  "appid": "__UNI__RESEE_GENEALOGY",
+  "description": "族见族谱工具 - OCR扫描录入 + AI自动建谱 + 关系网图 + 导出",
+  "version": "1.0.0",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "splashscreen": {
+      "alwaysShowBeforeRender": true,
+      "autoclose": true
+    }
+  },
+  "h5": {
+    "devServer": {
+      "port": 5173,
+      "https": false
+    },
+    "router": {
+      "mode": "hash"
+    },
+    "optimization": {
+      "prefetch": true
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": true
+  },
+  "uniCloud": {
+    "spaceId": "",
+    "providerName": "aliyun"
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "族见",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/ocr/index",
+      "style": {
+        "navigationBarTitleText": "扫描族谱",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/ocr-review/index",
+      "style": {
+        "navigationBarTitleText": "校正",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/tree/index",
+      "style": {
+        "navigationBarTitleText": "族谱树",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/graph/index",
+      "style": {
+        "navigationBarTitleText": "关系网图",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/person/index",
+      "style": {
+        "navigationBarTitleText": "成员详情",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/search/index",
+      "style": {
+        "navigationBarTitleText": "AI搜索",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/export/index",
+      "style": {
+        "navigationBarTitleText": "导出",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "navigationBarBackgroundColor": "#8B6F47",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "族见",
+    "navigationBarBackgroundColor": "#F9F5F0",
+    "backgroundColor": "#F9F5F0"
+  },
+  "tabBar": {
+    "color": "#8B7B6B",
+    "selectedColor": "#8B6F47",
+    "backgroundColor": "#F9F5F0",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabs/home.png",
+        "selectedIconPath": "static/tabs/home-active.png"
+      },
+      {
+        "pagePath": "pages/tree/index",
+        "text": "族谱树",
+        "iconPath": "static/tabs/tree.png",
+        "selectedIconPath": "static/tabs/tree-active.png"
+      },
+      {
+        "pagePath": "pages/graph/index",
+        "text": "关系图",
+        "iconPath": "static/tabs/graph.png",
+        "selectedIconPath": "static/tabs/graph-active.png"
+      },
+      {
+        "pagePath": "pages/search/index",
+        "text": "搜索",
+        "iconPath": "static/tabs/search.png",
+        "selectedIconPath": "static/tabs/search-active.png"
+      },
+      {
+        "pagePath": "pages/settings/index",
+        "text": "设置",
+        "iconPath": "static/tabs/mine.png",
+        "selectedIconPath": "static/tabs/mine-active.png"
+      }
+    ]
+  }
+}

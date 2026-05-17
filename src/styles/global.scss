@@ -1,0 +1,175 @@
+/**
+ * 族见族谱工具 - 全局样式
+ * 品牌色彩：暖棕#8B6F47 / 金棕#C9A961 / 琥珀橙#D48C4A / 米白#F9F5F0 / 深棕灰#4A3F35
+ */
+
+:root {
+  --primary: #8B6F47;
+  --secondary: #C9A961;
+  --accent: #D48C4A;
+  --bg-light: #F9F5F0;
+  --text-dark: #4A3F35;
+  --text-muted: #8B7B6B;
+  --gradient-end: #E8D5B7;
+  --border: #E0D5C8;
+  --shadow: rgba(139, 111, 71, 0.12);
+}
+
+page {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+view, text, image, navigator, button, input, textarea {
+  box-sizing: border-box;
+}
+
+/* 文字 */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-accent { color: var(--accent); }
+.text-muted { color: var(--text-muted); }
+.text-white { color: #fff; }
+
+/* 按钮 */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 48rpx;
+  font-size: 15px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.btn-primary:active { opacity: 0.85; }
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 48rpx;
+  font-size: 15px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.btn-accent:active { opacity: 0.85; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 2rpx solid var(--primary);
+  border-radius: 8rpx;
+  padding: 24rpx 48rpx;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin: 24rpx;
+  box-shadow: 0 4rpx 16rpx var(--shadow);
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 16rpx;
+}
+
+/* 输入框 */
+.input-group {
+  margin-bottom: 24rpx;
+}
+
+.input-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  border: 2rpx solid var(--border);
+  border-radius: 8rpx;
+  padding: 24rpx;
+  font-size: 15px;
+  background: #fff;
+  color: var(--text-dark);
+}
+
+.input:focus { border-color: var(--primary); }
+
+/* 标签 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 12px;
+  background: var(--gradient-end);
+  color: var(--primary);
+}
+
+.tag-warn { background: #FFF3E0; color: var(--accent); }
+.tag-success { background: #E8F5E9; color: #4CAF50; }
+.tag-error { background: #FFEBEE; color: #F44336; }
+
+/* 分割线 */
+.divider {
+  height: 2rpx;
+  background: var(--border);
+  margin: 32rpx 0;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  color: var(--text-muted);
+}
+
+.empty-icon { font-size: 64rpx; margin-bottom: 16rpx; opacity: 0.5; }
+.empty-text { font-size: 14px; }
+
+/* 加载 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  color: var(--text-muted);
+}
+
+/* 状态栏 */
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot-confirmed { background: var(--primary); }
+.status-dot-inferred { background: var(--secondary); }
+.status-dot-disputed { background: #F44336; }
