@@ -36,7 +36,7 @@
     "usingComponents": true
   },
   "uniCloud": {
-    "spaceId": "",
+    "spaceId": "mp-cb4493b6-a3cb-4d62-8f65-49341c4c701a",
     "providerName": "aliyun"
   }
 }
