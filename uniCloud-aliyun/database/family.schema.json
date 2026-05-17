@@ -1,0 +1,39 @@
+{
+  "bsonType": "object",
+  "required": ["name", "owner_uid"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "name": { "bsonType": "string", "label": "族谱名称" },
+    "root_person_id": { "bsonType": "string", "label": "始祖ID" },
+    "description": { "bsonType": "string", "label": "描述" },
+    "cover_image": { "bsonType": "string", "label": "封面图" },
+    "owner_uid": { "bsonType": "string", "label": "所有者UID" },
+    "is_public": { "bsonType": "bool", "label": "是否公开" },
+    "source": { "bsonType": "string", "label": "来源", "enum": ["manual", "ocr", "merge"] },
+    "origin": {
+      "bsonType": "object",
+      "label": "族谱源信息",
+      "properties": {
+        "ancestor_name": { "bsonType": "string", "label": "始祖名" },
+        "origin_location": { "bsonType": "string", "label": "发源地" },
+        "immigrated_year": { "bsonType": "string", "label": "迁徙年份" },
+        "immigrated_reason": { "bsonType": "string", "label": "迁徙原因" },
+        "surname_origin": { "bsonType": "string", "label": "姓氏来源" },
+        "hall_name": { "bsonType": "string", "label": "堂号" },
+        "ancestral_verse": { "bsonType": "string", "label": "辈分诗" }
+      }
+    },
+    "location": {
+      "bsonType": "object",
+      "label": "地理位置",
+      "properties": {
+        "county": { "bsonType": "string", "label": "县" },
+        "town": { "bsonType": "string", "label": "镇" },
+        "district": { "bsonType": "string", "label": "区/街道" },
+        "village": { "bsonType": "string", "label": "村" }
+      }
+    },
+    "editions": { "bsonType": "array", "label": "修订版次" },
+    "created_at": { "bsonType": "string", "label": "创建时间" }
+  }
+}

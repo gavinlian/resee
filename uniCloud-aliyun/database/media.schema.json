@@ -1,0 +1,15 @@
+{
+  "bsonType": "object",
+  "required": ["family_id", "person_id"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "family_id": { "bsonType": "string", "label": "族谱ID" },
+    "person_id": { "bsonType": "string", "label": "成员ID" },
+    "type": { "bsonType": "string", "label": "类型", "enum": ["photo", "tombstone", "document", "video", "audio", "other"] },
+    "url": { "bsonType": "string", "label": "媒体URL" },
+    "description": { "bsonType": "string", "label": "描述" },
+    "source_id": { "bsonType": "string", "label": "来源ID" },
+    "page_number": { "bsonType": "string", "label": "页码" },
+    "created_at": { "bsonType": "string", "label": "创建时间" }
+  }
+}

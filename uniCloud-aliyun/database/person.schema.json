@@ -1,0 +1,23 @@
+{
+  "bsonType": "object",
+  "required": ["family_id", "name"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "family_id": { "bsonType": "string", "label": "族谱ID", "description": "所属族谱ID" },
+    "name": { "bsonType": "string", "label": "姓名" },
+    "gender": { "bsonType": "string", "label": "性别", "enum": ["male", "female", "unknown"] },
+    "birth_year": { "bsonType": "string", "label": "出生年" },
+    "death_year": { "bsonType": "string", "label": "卒年" },
+    "generation": { "bsonType": "int", "label": "代数" },
+    "generation_name": { "bsonType": "string", "label": "辈分名" },
+    "courtesy_name": { "bsonType": "string", "label": "字" },
+    "art_name": { "bsonType": "string", "label": "号" },
+    "birthplace": { "bsonType": "string", "label": "出生地" },
+    "bio": { "bsonType": "string", "label": "简介" },
+    "confidence": { "bsonType": "double", "label": "置信度" },
+    "tombstone_image": { "bsonType": "string", "label": "墓碑图片" },
+    "adopted": { "bsonType": "bool", "label": "是否收养" },
+    "no_descendants": { "bsonType": "bool", "label": "后续无人" },
+    "created_at": { "bsonType": "string", "label": "创建时间" }
+  }
+}

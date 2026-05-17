@@ -1,0 +1,13 @@
+{
+  "bsonType": "object",
+  "required": ["family_id", "from_id", "to_id", "type"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "family_id": { "bsonType": "string", "label": "族谱ID" },
+    "from_id": { "bsonType": "string", "label": "成员A ID" },
+    "to_id": { "bsonType": "string", "label": "成员B ID" },
+    "type": { "bsonType": "string", "label": "关系类型", "enum": ["父子", "母子", "配偶", "兄弟", "翁婿", "其他"] },
+    "confidence": { "bsonType": "double", "label": "置信度" },
+    "is_disputed": { "bsonType": "bool", "label": "是否存疑" }
+  }
+}

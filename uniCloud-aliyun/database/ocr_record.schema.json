@@ -1,0 +1,16 @@
+{
+  "bsonType": "object",
+  "required": ["family_id"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "family_id": { "bsonType": "string", "label": "族谱ID" },
+    "image_path": { "bsonType": "string", "label": "图片路径" },
+    "raw_text": { "bsonType": "string", "label": "OCR原始文本" },
+    "parsed_text": { "bsonType": "string", "label": "AI解析后文本" },
+    "confidence": { "bsonType": "double", "label": "识别置信度" },
+    "status": { "bsonType": "string", "label": "状态", "enum": ["pending", "parsed", "reviewed", "applied"] },
+    "persons_json": { "bsonType": "string", "label": "解析人物JSON" },
+    "relations_json": { "bsonType": "string", "label": "解析关系JSON" },
+    "created_at": { "bsonType": "string", "label": "创建时间" }
+  }
+}

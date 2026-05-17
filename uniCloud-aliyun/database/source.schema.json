@@ -1,0 +1,17 @@
+{
+  "bsonType": "object",
+  "required": ["family_id", "title"],
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "family_id": { "bsonType": "string", "label": "族谱ID" },
+    "title": { "bsonType": "string", "label": "来源标题" },
+    "type": { "bsonType": "string", "label": "类型", "enum": ["book", "document", "tombstone", "photo", "oral", "other"] },
+    "author": { "bsonType": "string", "label": "作者/编者" },
+    "year": { "bsonType": "string", "label": "年份/年代" },
+    "description": { "bsonType": "string", "label": "说明" },
+    "url": { "bsonType": "string", "label": "原文链接" },
+    "confidence": { "bsonType": "double", "label": "可信度" },
+    "referenced_count": { "bsonType": "int", "label": "引用次数" },
+    "created_at": { "bsonType": "string", "label": "创建时间" }
+  }
+}
