@@ -1,5 +1,121 @@
+<template>
+  <view class="search-page">
+    <!-- 搜索框区域 -->
+    <view class="search-header">
+      <view class="search-box">
+        <text class="search-icon">🔍</text>
+        <input
+          v-model="query"
+          class="search-input"
+          style="flex:1;min-width:0;padding:16rpx 16rpx;font-size:15px;background:transparent;border:none;outline:none;color:var(--text-dark);"
+          placeholder="搜索姓名、字、号、地点..."
+          @confirm="onSearch"
+          @input="onInputChange"
+        />
+        <text v-if="query" class="clear-btn" @click="clearSearch">✕</text>
+      </view>
+      <button class="search-btn" :disabled="!query.trim()" @click="onSearch">
+        搜索
+      </button>
+    </view>
+
+    <!-- 模式切换 -->
+    <view class="mode-toggle">
+      <view
+        class="mode-btn"
+        :class="{ active: aiMode === 'keyword' }"
+        @click="switchMode('keyword')"
+      >
+        <text class="mode-icon">🔤</text>
+        <text class="mode-text">关键词</text>
+      </view>
+      <view
+        class="mode-btn"
+        :class="{ active: aiMode === 'ai' }"
+        @click="switchMode('ai')"
+      >
+        <text class="mode-icon">🤖</text>
+        <text class="mode-text">AI搜索</text>
+        <text class="limit-badge" v-if="limits.limits.search >= 0">{{ limits.limits.search }}</text>
+      </view>
+    </view>
+
+    <!-- AI模式提示 -->
+    <view v-if="aiMode === 'ai'" class="ai-tips">
+      <text>💡 可用自然语言搜索，如"曾祖父的弟弟叫什么"</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view v-if="loading" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">搜索中...</text>
+    </view>
+
+    <!-- AI回答 -->
+    <view v-if="aiAnswer && !loading" class="ai-answer">
+      <view class="answer-header">
+        <text class="answer-icon">🤖</text>
+        <text class="answer-title">AI 回答</text>
+      </view>
+      <text class="answer-text">{{ aiAnswer }}</text>
+    </view>
+
+    <!-- 结果列表 -->
+    <view class="results-section">
+      <view v-if="!loading && results.length === 0 && query" class="empty-results">
+        <text class="empty-icon">🔍</text>
+        <text class="empty-text">未找到相关结果</text>
+        <text class="empty-hint">尝试其他关键词或切换到AI搜索</text>
+      </view>
+
+      <view v-else-if="!loading && results.length === 0 && !query" class="hint-results">
+        <view class="hint-item" @click="query = '张'; onSearch()">
+          <text class="hint-icon">👤</text>
+          <text class="hint-text">张姓族人</text>
+        </view>
+        <view class="hint-item" @click="query = '字：'; onSearch()">
+          <text class="hint-icon">📝</text>
+          <text class="hint-text">搜索字/号</text>
+        </view>
+      </view>
+
+      <view v-else class="result-list">
+        <view class="result-header" v-if="results.length > 0">
+          <text class="result-count">找到 {{ results.length }} 个结果</text>
+        </view>
+
+        <view
+          v-for="item in results"
+          :key="item.person._id"
+          class="result-card"
+          @click="goToPerson(item.person)"
+        >
+          <view class="result-avatar">
+            <text>{{ item.person.name?.[0] || '?' }}</text>
+          </view>
+          <view class="result-info">
+            <text class="result-name">{{ item.person.name }}</text>
+            <text class="result-meta">
+              <text v-if="item.person.generation_name">第{{ item.person.generation }}世 {{ item.person.generation_name }}</text>
+              <text v-else>第{{ item.person.generation }}世</text>
+              <text v-if="item.person.birth_date"> · {{ item.person.birth_date }}</text>
+            </text>
+            <view class="result-tags">
+              <text class="result-tag" :class="item.match_type">{{ item.match_type }}</text>
+            </view>
+          </view>
+          <view class="result-score-wrap">
+            <view class="result-score" :style="{ width: (item.score * 100) + '%' }"></view>
+            <text class="score-text">{{ (item.score * 100).toFixed(0) }}%</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { aiSearch } from '@/api/ai'
 import { db, Person } from '@/utils/db'
 import { getAILimits } from '@/api/ai'
@@ -11,7 +127,13 @@ const loading = ref(false)
 const aiMode = ref<'keyword' | 'ai'>('keyword')
 const limits = ref(getAILimits())
 
-// 关键词搜索
+function onInputChange() {
+  if (!query.value.trim()) {
+    results.value = []
+    aiAnswer.value = ''
+  }
+}
+
 function keywordSearch() {
   if (!query.value.trim()) return
 
@@ -27,7 +149,6 @@ function keywordSearch() {
   })
 }
 
-// AI搜索
 async function doAiSearch() {
   if (!query.value.trim()) return
 
@@ -44,7 +165,6 @@ async function doAiSearch() {
   }
 }
 
-// 搜索
 function onSearch() {
   results.value = []
   aiAnswer.value = ''
@@ -56,18 +176,15 @@ function onSearch() {
   }
 }
 
-// 切换模式
 function switchMode(mode: 'keyword' | 'ai') {
   aiMode.value = mode
   limits.value = getAILimits()
 }
 
-// 跳转到成员详情
 function goToPerson(person: Person) {
   uni.navigateTo({ url: `/pages/person/index?id=${person._id}` })
 }
 
-// 清除
 function clearSearch() {
   query.value = ''
   results.value = []
@@ -75,105 +192,32 @@ function clearSearch() {
 }
 </script>
 
-<template>
-  <view class="search-page">
-    <!-- 搜索框 -->
-    <view class="search-bar">
-      <view class="search-input-wrap">
-        <text class="search-icon">🔍</text>
-        <input
-          v-model="query"
-          class="search-input"
-          style="flex:1;min-width:0;padding:0;font-size:15px;color:#4A3F35;border:none;background:transparent;outline:none;"
-          placeholder="搜索姓名、字、号、地点..."
-          @confirm="onSearch"
-        />
-        <text v-if="query" class="clear-btn" @click="clearSearch">✕</text>
-      </view>
-    </view>
-
-    <!-- 模式切换 -->
-    <view class="mode-toggle">
-      <view
-        class="mode-btn"
-        :class="{ active: aiMode === 'keyword' }"
-        @click="switchMode('keyword')"
-      >
-        <text>关键词</text>
-      </view>
-      <view
-        class="mode-btn"
-        :class="{ active: aiMode === 'ai' }"
-        @click="switchMode('ai')"
-      >
-        <text>AI搜索</text>
-        <text class="limit-badge">{{ limits.limits.search >= 0 ? limits.limits.search : '∞' }}</text>
-      </view>
-    </view>
-
-    <!-- AI模式提示 -->
-    <view v-if="aiMode === 'ai'" class="ai-tips">
-      <text>💡 可用自然语言搜索，如"曾祖父的弟弟叫什么"</text>
-    </view>
-
-    <!-- 搜索按钮 -->
-    <button class="btn-primary search-btn" :disabled="loading || !query.trim()" @click="onSearch">
-      {{ loading ? '搜索中...' : '搜索' }}
-    </button>
-
-    <!-- AI回答 -->
-    <view v-if="aiAnswer" class="ai-answer">
-      <text class="answer-label">🤖 AI回答</text>
-      <text class="answer-text">{{ aiAnswer }}</text>
-    </view>
-
-    <!-- 结果列表 -->
-    <view class="results">
-      <view
-        v-for="item in results"
-        :key="item.person._id"
-        class="result-item"
-        @click="goToPerson(item.person)"
-      >
-        <view class="result-avatar">
-          <text>{{ item.person.name?.[0] || '?' }}</text>
-        </view>
-        <view class="result-info">
-          <text class="result-name">{{ item.person.name }}</text>
-          <text class="result-meta">
-            {{ item.person.generation_name ? `第${item.person.generation}世 ${item.person.generation_name}` : `第${item.person.generation}世` }}
-            <text v-if="item.person.birth_date"> · {{ item.person.birth_date }}</text>
-          </text>
-          <text v-if="item.match_type" class="result-type">{{ item.match_type }}</text>
-        </view>
-        <text class="result-score">{{ (item.score * 100).toFixed(0) }}%</text>
-      </view>
-
-      <view v-if="results.length === 0 && !loading" class="empty-results">
-        <text>搜索结果将显示在这里</text>
-      </view>
-    </view>
-  </view>
-</template>
-
 <style scoped lang="scss">
 .search-page {
   min-height: 100vh;
   background: var(--bg-light);
-  padding: 24rpx;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-.search-bar {
-  margin-bottom: 16rpx;
-}
-
-.search-input-wrap {
+.search-header {
   display: flex;
   align-items: center;
+  gap: 16rpx;
+  padding: 24rpx;
   background: #fff;
+  border-bottom: 2rpx solid var(--border);
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--bg-light);
   border: 2rpx solid var(--border);
-  border-radius: 12rpx;
-  padding: 0 24rpx;
+  border-radius: 16rpx;
+  padding: 0 20rpx;
+  height: 80rpx;
+  transition: border-color 0.2s;
 
   &:focus-within {
     border-color: var(--primary);
@@ -183,12 +227,12 @@ function clearSearch() {
 .search-icon {
   font-size: 28rpx;
   margin-right: 12rpx;
+  color: var(--text-muted);
 }
 
 .search-input {
   flex: 1;
   min-width: 0;
-  padding: 24rpx 0;
   font-size: 15px;
   color: var(--text-dark);
   border: none;
@@ -197,95 +241,238 @@ function clearSearch() {
 }
 
 .clear-btn {
-  padding: 8rpx;
-  font-size: 24rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
   color: var(--text-muted);
+  margin-left: 8rpx;
+}
+
+.search-btn {
+  padding: 20rpx 32rpx;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(139, 111, 71, 0.3);
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &:active { opacity: 0.9; }
 }
 
 .mode-toggle {
   display: flex;
   gap: 16rpx;
-  margin-bottom: 16rpx;
+  padding: 24rpx;
 }
 
 .mode-btn {
   flex: 1;
-  padding: 16rpx;
-  text-align: center;
-  background: #fff;
-  border-radius: 12rpx;
-  font-size: 14px;
-  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  border: 2rpx solid var(--border);
+  transition: all 0.2s;
 
   &.active {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-color: transparent;
     color: #fff;
-  }
+    box-shadow: 0 4rpx 12rpx rgba(139, 111, 71, 0.3);
 
-  .limit-badge {
-    font-size: 11px;
-    padding: 2rpx 8rpx;
-    background: rgba(255,255,255,0.3);
-    border-radius: 10rpx;
+    .mode-icon, .mode-text {
+      color: #fff;
+    }
+
+    .limit-badge {
+      background: rgba(255,255,255,0.3);
+      color: #fff;
+    }
   }
+}
+
+.mode-icon {
+  font-size: 28rpx;
+}
+
+.mode-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.limit-badge {
+  font-size: 11px;
+  padding: 4rpx 10rpx;
+  background: var(--gradient-end);
+  border-radius: 20rpx;
+  color: var(--primary);
 }
 
 .ai-tips {
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 12rpx 16rpx;
+  margin: 0 24rpx 24rpx;
+  padding: 16rpx 20rpx;
   background: var(--gradient-end);
-  border-radius: 8rpx;
-  margin-bottom: 16rpx;
+  border-radius: 12rpx;
+  font-size: 13px;
+  color: var(--primary);
 }
 
-.search-btn {
-  width: 100%;
-  margin-bottom: 24rpx;
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx;
+  gap: 16rpx;
+}
+
+.loading-spinner {
+  width: 56rpx;
+  height: 56rpx;
+  border: 4rpx solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
 .ai-answer {
-  background: #fff;
-  border-radius: 16rpx;
+  margin: 0 24rpx 24rpx;
   padding: 24rpx;
-  margin-bottom: 24rpx;
-
-  .answer-label {
-    font-size: 13px;
-    color: var(--primary);
-    font-weight: 500;
-    display: block;
-    margin-bottom: 12rpx;
-  }
-
-  .answer-text {
-    font-size: 14px;
-    line-height: 1.8;
-    color: var(--text-dark);
-  }
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx var(--shadow);
 }
 
-.results {
+.answer-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.answer-icon {
+  font-size: 32rpx;
+}
+
+.answer-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.answer-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-dark);
+}
+
+.results-section {
+  padding: 0 24rpx;
+}
+
+.empty-results, .hint-results {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx;
   gap: 12rpx;
 }
 
-.result-item {
+.empty-icon {
+  font-size: 64rpx;
+  margin-bottom: 8rpx;
+}
+
+.empty-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.hint-results {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.hint-item {
   display: flex;
   align-items: center;
-  gap: 16rpx;
+  gap: 8rpx;
+  padding: 16rpx 24rpx;
   background: #fff;
-  border-radius: 16rpx;
-  padding: 20rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 2rpx 8rpx var(--shadow);
+}
+
+.hint-icon {
+  font-size: 24rpx;
+}
+
+.hint-text {
+  font-size: 13px;
+  color: var(--text-dark);
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.result-header {
+  margin-bottom: 8rpx;
+}
+
+.result-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.result-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
   cursor: pointer;
+  box-shadow: 0 2rpx 12rpx var(--shadow);
+  transition: all 0.2s;
 
   &:active {
-    background: var(--gradient-end);
+    transform: scale(0.99);
+    box-shadow: 0 1rpx 6rpx var(--shadow);
   }
 }
 
@@ -293,51 +480,80 @@ function clearSearch() {
   width: 80rpx;
   height: 80rpx;
   border-radius: 50%;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32rpx;
   color: #fff;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .result-info {
   flex: 1;
+  min-width: 0;
 }
 
 .result-name {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 17px;
+  font-weight: 600;
   color: var(--text-dark);
   display: block;
-  margin-bottom: 4rpx;
+  margin-bottom: 6rpx;
 }
 
 .result-meta {
   font-size: 12px;
   color: var(--text-muted);
   display: block;
-  margin-bottom: 4rpx;
+  margin-bottom: 8rpx;
 }
 
-.result-type {
+.result-tags {
+  display: flex;
+  gap: 8rpx;
+}
+
+.result-tag {
   font-size: 11px;
-  color: var(--secondary);
-  padding: 2rpx 8rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
   background: var(--gradient-end);
-  border-radius: 6rpx;
+  color: var(--primary);
+
+  &.name {
+    background: #E8F5E9;
+    color: #4CAF50;
+  }
+
+  &.generation {
+    background: #E3F2FD;
+    color: #2196F3;
+  }
+
+  &.location {
+    background: #FFF3E0;
+    color: var(--accent);
+  }
+}
+
+.result-score-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4rpx;
+  min-width: 80rpx;
 }
 
 .result-score {
-  font-size: 12px;
-  color: var(--text-muted);
+  height: 6rpx;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  border-radius: 3rpx;
 }
 
-.empty-results {
-  text-align: center;
-  padding: 80rpx;
+.score-text {
+  font-size: 12px;
   color: var(--text-muted);
-  font-size: 13px;
 }
 </style>

@@ -41,6 +41,7 @@ const db = {
       });
       return { success: true, result: { _id: res.id } };
     } catch (e: any) {
+      console.error('[db] addFamily error:', e.message);
       return { success: false, error: e.message };
     }
   },

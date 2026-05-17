@@ -103,6 +103,14 @@
       }
     },
     {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationBarBackgroundColor": "#F9F5F0",
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
       "path": "pages/settings/index",
       "style": {
         "navigationBarTitleText": "设置",
@@ -126,32 +134,32 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "static/tabs/home.png",
-        "selectedIconPath": "static/tabs/home-active.png"
+        "iconPath": "../static/tabs/home.svg",
+        "selectedIconPath": "../static/tabs/home-active.svg"
       },
       {
         "pagePath": "pages/tree/index",
         "text": "族谱树",
-        "iconPath": "static/tabs/tree.png",
-        "selectedIconPath": "static/tabs/tree-active.png"
+        "iconPath": "../static/tabs/tree.svg",
+        "selectedIconPath": "../static/tabs/tree-active.svg"
       },
       {
         "pagePath": "pages/graph/index",
         "text": "关系图",
-        "iconPath": "static/tabs/graph.png",
-        "selectedIconPath": "static/tabs/graph-active.png"
+        "iconPath": "../static/tabs/graph.svg",
+        "selectedIconPath": "../static/tabs/graph-active.svg"
       },
       {
         "pagePath": "pages/search/index",
         "text": "搜索",
-        "iconPath": "static/tabs/search.png",
-        "selectedIconPath": "static/tabs/search-active.png"
+        "iconPath": "../static/tabs/search.svg",
+        "selectedIconPath": "../static/tabs/search-active.svg"
       },
       {
         "pagePath": "pages/settings/index",
         "text": "设置",
-        "iconPath": "static/tabs/mine.png",
-        "selectedIconPath": "static/tabs/mine-active.png"
+        "iconPath": "../static/tabs/mine.svg",
+        "selectedIconPath": "../static/tabs/mine-active.svg"
       }
     ]
   }

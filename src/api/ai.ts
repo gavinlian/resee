@@ -26,8 +26,10 @@ const AI_LIMITS = {
 // 用户当日调用计数（本地存储，实际应走云端）
 function getDailyCount(type: 'ocr' | 'search' | 'parse'): number {
   const key = `ai_count_${type}_${formatDate(new Date())}`
-  const count = uni.getStorageSync(key)
-  return count ? parseInt(count) : 0
+  const stored = uni.getStorageSync(key)
+  if (stored === null || stored === undefined || stored === '') return 0
+  const n = parseInt(String(stored), 10)
+  return isNaN(n) ? 0 : n
 }
 
 function incrementDailyCount(type: 'ocr' | 'search' | 'parse') {
@@ -45,8 +47,13 @@ function formatDate(date: Date): string {
 
 // 获取用户等级
 function getUserLevel(): 'free' | 'member' | 'vip' {
-  const level = uni.getStorageSync('user_level') || 'free'
-  return level as 'free' | 'member' | 'vip'
+  // 优先从已登录用户信息获取等级
+  const storedLevel = uni.getStorageSync('user_level')
+  if (storedLevel === 'member' || storedLevel === 'vip') {
+    return storedLevel as 'member' | 'vip'
+  }
+  // 未登录或游客默认免费
+  return 'free'
 }
 
 // 检查是否超过限制

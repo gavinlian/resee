@@ -1,0 +1,37 @@
+{
+  "_id": {
+    "type": "string"
+  },
+  "openid": {
+    "type": "string"
+  },
+  "unionid": {
+    "type": "string"
+  },
+  "nickname": {
+    "type": "string",
+    "defaultValue": ""
+  },
+  "avatar": {
+    "type": "string",
+    "defaultValue": ""
+  },
+  "phone": {
+    "type": "string",
+    "defaultValue": ""
+  },
+  "level": {
+    "type": "string",
+    "defaultValue": "free",
+    "enum": ["free", "member", "vip"]
+  },
+  "create_date": {
+    "type": "timestamp"
+  },
+  "last_login_date": {
+    "type": "timestamp"
+  },
+  "session_key": {
+    "type": "string"
+  }
+}

@@ -1,0 +1,12 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- 关系网络图标 - 三个节点连线 -->
+  <path d="M8 10 L24 22" stroke="#8B7B6B" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M8 10 L24 6" stroke="#8B7B6B" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M24 22 L24 6" stroke="#8B7B6B" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 节点 -->
+  <circle cx="8" cy="10" r="4" fill="none" stroke="#8B7B6B" stroke-width="2"/>
+  <circle cx="24" cy="22" r="4" fill="none" stroke="#8B7B6B" stroke-width="2"/>
+  <circle cx="24" cy="6" r="4" fill="none" stroke="#8B7B6B" stroke-width="2"/>
+  <!-- 中心节点 -->
+  <circle cx="16" cy="14" r="3" fill="#8B7B6B"/>
+</svg>

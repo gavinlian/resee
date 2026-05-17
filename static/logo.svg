@@ -1,0 +1,43 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ñ€Z¿¯ -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#8B6F47" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.2"/>
+  <circle cx="100" cy="100" r="75" fill="none" stroke="#C9A961" stroke-width="0.3" stroke-dasharray="2 8" opacity="0.15"/>
+
+  <!-- ;r - –Õr -->
+  <path d="M100 180 L100 140" stroke="#8B6F47" stroke-width="3" stroke-linecap="round"/>
+  <path d="M100 140 L100 100" stroke="#8B6F47" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M100 100 L100 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- ;/ - ÑÕr -->
+  <path d="M100 140 C88 132, 65 118, 50 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M100 100 C82 92, 55 78, 40 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+  <path d="M100 140 C112 132, 135 118, 150 100" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M100 100 C118 92, 145 78, 160 60" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- !/ -->
+  <path d="M50 100 C45 88, 35 75, 30 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M150 100 C155 88, 165 75, 170 65" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- ‚¹ - VH(•è) - –Õr -->
+  <circle cx="100" cy="180" r="11" fill="#8B6F47"/>
+  <circle cx="100" cy="140" r="10" fill="#8B6F47"/>
+  <circle cx="50" cy="100" r="9" fill="#C9A961"/>
+  <circle cx="150" cy="100" r="9" fill="#C9A961"/>
+
+  <!-- ‚¹ - -B -->
+  <circle cx="100" cy="100" r="9" fill="#C9A961"/>
+
+  <!-- ‚¹ - vè(*e) - %ÀY -->
+  <circle cx="100" cy="60" r="8" fill="#D48C4A"/>
+  <circle cx="100" cy="60" r="14" fill="none" stroke="#D48C4A" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- 43‚¹ -->
+  <circle cx="100" cy="100" r="5" fill="#E8D5B7"/>
+  <circle cx="100" cy="100" r="3" fill="#F9F5F0"/>
+
+  <!-- +ï‚¹ -->
+  <circle cx="40" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+  <circle cx="160" cy="60" r="6" fill="#D48C4A" opacity="0.8"/>
+  <circle cx="30" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+  <circle cx="170" cy="65" r="5" fill="#C9A961" opacity="0.6"/>
+</svg>
