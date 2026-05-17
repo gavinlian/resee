@@ -153,6 +153,7 @@ onMounted(() => {
         <input
           v-model="newFamilyName"
           class="input"
+          style="width:100%;padding:20rpx 24rpx;border:2rpx solid #E0D5C8;border-radius:12rpx;font-size:28rpx;background:#fff;color:#333;box-sizing:border-box;"
           placeholder="请输入族谱名称"
           focus
         />

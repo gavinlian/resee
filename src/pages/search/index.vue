@@ -84,6 +84,7 @@ function clearSearch() {
         <input
           v-model="query"
           class="search-input"
+          style="flex:1;min-width:0;padding:0;font-size:15px;color:#4A3F35;border:none;background:transparent;outline:none;"
           placeholder="搜索姓名、字、号、地点..."
           @confirm="onSearch"
         />
@@ -186,9 +187,13 @@ function clearSearch() {
 
 .search-input {
   flex: 1;
+  min-width: 0;
   padding: 24rpx 0;
   font-size: 15px;
   color: var(--text-dark);
+  border: none;
+  background: transparent;
+  outline: none;
 }
 
 .clear-btn {

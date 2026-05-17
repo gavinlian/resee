@@ -390,7 +390,7 @@ async function saveAll() {
 
 .raw-text-input {
   width: 100%;
-  min-height: 400rpx;
+  height: 300rpx;
   padding: 24rpx;
   background: #fff;
   border: 2rpx solid var(--border);
@@ -399,6 +399,7 @@ async function saveAll() {
   line-height: 1.8;
   color: var(--text-dark);
   margin-bottom: 24rpx;
+  box-sizing: border-box;
 }
 
 .preview-tips {

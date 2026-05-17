@@ -7,9 +7,18 @@ const rawText = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
 const step = ref<'upload' | 'preview' | 'text'>('upload')
+const fileInput = ref<HTMLInputElement | null>(null)
 
-// 选择图片
+// 选择图片（兼容PC和手机）
 function chooseImage() {
+  // #ifdef H5
+  // PC 浏览器：用原生 file input
+  if (!fileInput.value) return
+  fileInput.value.click()
+  // #endif
+
+  // #ifdef MP-WEIXIN || APP-PLUS || H5
+  // 手机端：用 uni API
   uni.chooseImage({
     count: 1,
     sizeType: ['compressed'],
@@ -19,6 +28,20 @@ function chooseImage() {
       step.value = 'preview'
     }
   })
+  // #endif
+}
+
+// PC 浏览器 file input 选择完成
+function onFileSelected(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  // 转为本地 URL 显示
+  const url = URL.createObjectURL(file)
+  imagePath.value = url
+  step.value = 'preview'
+  target.value = ''
 }
 
 // 重新选择
@@ -64,7 +87,6 @@ function goToReview() {
     return
   }
 
-  // 保存OCR结果
   uni.setStorageSync('ocr_raw_text', rawText.value)
   uni.setStorageSync('ocr_image_path', imagePath.value)
 
@@ -72,13 +94,29 @@ function goToReview() {
     url: `/pages/ocr-review/index?familyId=${familyId}`
   })
 }
+
+// 隐藏 file input（用于 PC 浏览器选择文件）
+function triggerFileInput() {
+  fileInput.value?.click()
+}
 </script>
 
 <template>
   <view class="ocr-page">
+    <!-- PC 浏览器隐藏的 file input -->
+    <!-- #ifdef H5 -->
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="onFileSelected"
+    />
+    <!-- #endif -->
+
     <!-- 上传区域 -->
     <view v-if="step === 'upload'" class="upload-area">
-      <view class="upload-box" @click="chooseImage">
+      <view class="upload-box" @click="triggerFileInput">
         <text class="upload-icon">📷</text>
         <text class="upload-text">点击拍照/选择族谱照片</text>
         <text class="upload-hint">支持 JPG/PNG/PDF，最长边≥2000px</text>
@@ -247,6 +285,7 @@ function goToReview() {
   line-height: 1.8;
   color: var(--text-dark);
   margin-bottom: 24rpx;
+  box-sizing: border-box;
 }
 
 .text-actions {
